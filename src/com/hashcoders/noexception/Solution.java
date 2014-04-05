@@ -3,16 +3,17 @@ package com.hashcoders.noexception;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Solution {
 	
 	public static class Path {
-		List<Intersection> intersections;
+		List<Intersection> intersections = new ArrayList<Intersection>();
 	}
 	
 	int C;
-	List<Path> paths;
+	List<Path> paths = new ArrayList<Path>();
 	
 	
 	public void toFile(String filename) throws FileNotFoundException, UnsupportedEncodingException {
