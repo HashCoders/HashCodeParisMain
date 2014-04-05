@@ -43,11 +43,13 @@ public class Data {
 			String[] road = line.split(" ");
 			Intersection from = data.intersections.get(Integer.parseInt(road[0]));
 			Intersection to = data.intersections.get(Integer.parseInt(road[1]));
+			int cost = Integer.parseInt(road[3]);
+			int length = Integer.parseInt(road[4]);
 			Road direct = new Road(
 					from, 
 					to,
-					Integer.parseInt(road[3]),
-					Integer.parseInt(road[4]), 
+					cost,
+					length, 
 					data.roads.size());
 
 			data.roads.add(direct);
@@ -56,10 +58,10 @@ public class Data {
 			
 			if (Integer.parseInt(road[2]) == 2) {
 				Road indirect = new Road(
-						data.intersections.get(Integer.parseInt(road[1])),
-						data.intersections.get(Integer.parseInt(road[0])), 
-						Integer.parseInt(road[3]),
-						Integer.parseInt(road[4]),
+						to,
+						from, 
+						cost,
+						length, 
 						data.roads.size());
 				
 				data.roads.add(indirect);

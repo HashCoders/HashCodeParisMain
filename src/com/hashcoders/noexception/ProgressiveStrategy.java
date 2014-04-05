@@ -26,9 +26,13 @@ public class ProgressiveStrategy implements Strategy {
 		}
 		
 		boolean isOver(float maxT) {
-			for (Road road : intersection.outgoing)
-				if (t + road.cost < maxT)
+			if (intersection.outgoing.isEmpty())
+				System.out.println("Empty intersection");
+			for (Road road : intersection.outgoing) {
+				System.out.println("Current time: " + t + " ; candidate: " + road.cost);
+				if (t + road.cost <= maxT)
 					return false;
+			}
 			return true;
 		}
 	}
@@ -68,6 +72,7 @@ public class ProgressiveStrategy implements Strategy {
 		Solution solution = new Solution(data.C);
 		for (Road r : data.roads)
 			passedRoads.add(new Boolean(false));
+		System.out.println("maxT: " + data.maxT);
 		
 		List<Vehicle> vehicles = new ArrayList<Vehicle>();
 		for (int i = 0; i < data.C; i++)
@@ -83,12 +88,14 @@ public class ProgressiveStrategy implements Strategy {
 				break;
 			if (vehicle.isOver(data.maxT))
 			{
+				System.out.println("Vehicle is over...");
 				vehicle.over = true;
 				continue;
 			}
 			
 			// Select best road
 			Road road = selectBestRoad(vehicle.intersection, vehicle.t, data.maxT);
+			System.out.println("Vehicle " + vehicle.i + " takes a road costing " + road.cost);
 			vehicle.takeRoad(road);
 			solution.paths.get(vehicle.i).intersections.add(road.to);
 			passedRoads.set(road.i, true);
