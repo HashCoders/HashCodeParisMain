@@ -1,12 +1,18 @@
 package com.hashcoders.noexception;
 
+import java.io.IOException;
+
 public class Main {
 
 	public static void main(String[] args) {
-		Data data = Data.fromFile("input.txt");
-		Strategy strategy = null;
-		Solution solution = strategy.process(data);
-		solution.toFile("output.txt");
+		try {
+			Data data = Data.fromFile("input.txt");
+			Strategy strategy = null;
+			Solution solution = strategy.process(data);
+			solution.toFile("output.txt");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
