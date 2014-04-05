@@ -42,12 +42,30 @@ public class Data {
 		{
 			line = br.readLine();
 			String[] road = line.split(" ");
-			data.roads.add(new Road(
-					data.intersections.get(Integer.parseInt(road[0])), 
-					data.intersections.get(Integer.parseInt(road[1])),
-					(Integer.parseInt(road[2]) == 1),
+			Intersection from = data.intersections.get(Integer.parseInt(road[0]));
+			Intersection to = data.intersections.get(Integer.parseInt(road[1]));
+			Road direct = new Road(
+					from, 
+					to,
 					Integer.parseInt(road[3]),
-					Integer.parseInt(road[4])));
+					Integer.parseInt(road[4]));
+
+			data.roads.add(direct);
+			from.outgoing.add(direct);
+			to.incoming.add(direct);
+			
+			if (Integer.parseInt(road[2]) == 2) {
+				Road indirect = new Road(
+						data.intersections.get(Integer.parseInt(road[1])),
+						data.intersections.get(Integer.parseInt(road[0])), 
+						Integer.parseInt(road[3]),
+						Integer.parseInt(road[4]));
+				
+				data.roads.add(indirect);
+
+				to.outgoing.add(indirect);
+				from.incoming.add(indirect);
+			}
 		}
 		
 		br.close();
