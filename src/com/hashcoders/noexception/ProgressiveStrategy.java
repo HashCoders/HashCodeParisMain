@@ -18,6 +18,7 @@ public class ProgressiveStrategy implements Strategy {
 	
 	class Vehicle {
 		int i;
+		int role;
 		float t;
 		Intersection intersection;
 		boolean over = false;
@@ -27,9 +28,10 @@ public class ProgressiveStrategy implements Strategy {
 		Vehicle(int i, float t, Intersection intersection) {
 			this.t = t;
 			this.i = i;
+			role = i;
 			this.intersection = intersection;
-			// cX = intersection.longitude;
-			// cY = intersection.latitude;
+			//cX = intersection.longitude;
+			//cY = intersection.latitude;
 			cX = 2.351828;
 			cY = 48.856578;
 		}
@@ -38,6 +40,20 @@ public class ProgressiveStrategy implements Strategy {
 			assert(intersection == road.from);
 			t += road.cost;
 			intersection = road.to;
+		}
+		
+		boolean isInGoodQuadrant() {
+			Direction dir = new Direction(role);
+			Direction dir2 = new Direction(intersection.longitude - cX, intersection.latitude - cY);
+			return dir.comply(dir2);
+		}
+		
+		public int getIdealRole() {
+			Direction dir = new Direction(intersection.longitude - cX, intersection.latitude - cY);			
+			for (int i = 0; i < 8; i++)
+				if (dir.comply(new Direction(i)))
+					return i;
+			return 0;
 		}
 		
 		boolean isOver(int maxT) {
@@ -71,18 +87,22 @@ public class ProgressiveStrategy implements Strategy {
 				goTop = alpha > 0;
 				goVertical = (Math.abs(alpha) > Math.PI/4) && (Math.abs(alpha) < 3*Math.PI/4);
 			}
-			
+
+			public Direction(double longitude, double latitude) {
+				this(Math.atan2(longitude, latitude));
+			}
+
 			public int compare(Direction ideal, int idealScore, Direction planB, int planBScore) {
 				int score = 1;
 
 				if (goTop == ideal.goTop)
 					score += idealScore;
-				if (goTop == planB.goTop)
+				else if (goTop == planB.goTop)
 					score += planBScore;
 
 				if (goLeft == ideal.goLeft)
 					score += idealScore;
-				if (goLeft == planB.goLeft)
+				else if (goLeft == planB.goLeft)
 					score += planBScore;
 
 				if (goVertical == ideal.goVertical)
@@ -99,22 +119,22 @@ public class ProgressiveStrategy implements Strategy {
 			ty = r.to.latitude - cY;
 			rx = r.to.longitude -r.from.longitude;
 			ry = r.to.latitude - r.from.latitude;
-
 			
-			double talpha = Math.atan2(ty, tx);
-			double ralpha = Math.atan2(ry, rx);
 			// System.out.println("Talpha: " + talpha);
 			// System.out.println("Ralpha: " + ralpha);
-			Direction total = new Direction(talpha);
-			Direction relative = new Direction(ralpha);
-			Direction orders = new Direction(i);
+			Direction total = new Direction(ty, tx);
+			Direction relative = new Direction(ry, rx);
+			Direction orders = new Direction(role);
 
 			int score = orders.compare(total, idealScore, relative, planBScore);
 			
 			// System.out.println("Score: " + score);
 			if (orders.comply(total) && !passedRoads.get(r.loot.i)) {
+				//System.out.println("Comply!");
 				score += newScore;
 				// System.out.println("BisScore: " + score + " ; " + r.loot.i);
+			} else {
+				//System.out.println("Nooon Comply!");
 			}
 			return score;
 		}
@@ -175,7 +195,48 @@ public class ProgressiveStrategy implements Strategy {
 		for (Loot l : data.loots)
 			passedRoads.add(new Boolean(false));
 		
+		int step = 0;
 		while(true) {
+			step++;
+			
+			if (step%100 == 0) {
+				//Reorganize
+				List< List<Vehicle> > candidates = new ArrayList<List<Vehicle>>();
+				for (Vehicle v : vehicles)
+					candidates.add(new ArrayList<Vehicle>());
+				
+				int[] idealRoles = new int[vehicles.size()];
+				for (Vehicle v : vehicles) {
+					//System.out.println("Ideal for " + v.i + " : " + v.getIdealRole());
+					idealRoles[v.i] = v.getIdealRole();
+					candidates.get(v.getIdealRole()).add(v);
+				}
+				List<Integer> ingrateRoles = new ArrayList<Integer>();
+				List<Vehicle> leftOvers = new ArrayList<Vehicle>();
+				Random random = new Random();
+				for (int i = 0; i < candidates.size(); ++i) {
+					if (candidates.get(i).isEmpty())
+						ingrateRoles.add(i);
+					else {
+						int selected = random.nextInt(candidates.get(i).size());
+						candidates.get(i).get(selected).role = i;
+						for (int j = 0; j < candidates.get(i).size(); j++) {
+							if (j == selected)
+								continue;
+							leftOvers.add(candidates.get(i).get(j));
+						}
+					}
+				}
+				
+				//System.out.println("Step: " + step);
+				for (Integer role : ingrateRoles) {
+					//System.out.println("Trying for role " + role);
+					int selected = random.nextInt(leftOvers.size());
+					leftOvers.get(selected).role = role;
+					leftOvers.remove(selected);
+				}
+			}
+			
 			// Pick earliest vehicle
 			Vehicle vehicle = selectEarliest(vehicles);
 			if (vehicle == null)
