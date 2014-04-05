@@ -72,14 +72,18 @@ public class Random_Better implements Strategy {
 		return from;
 	}
 
-	public void createPath(Intersection start, List<Intersection> path) {
+	public List<Road> createPath(Intersection start, List<Intersection> path) {
+		List<Road> usedHere = new ArrayList<Road>();
 		Intersection temp = start;
+		Intersection temp2 = temp;
 		path.add(start);
 		while (time != 0) {
+			temp2 = temp;
 			temp = nextIntersection(temp, path);
-			if (temp.equals(start))
-				return;
+			if (temp.equals(temp2))
+				return new ArrayList<Road>();
 		}
+		return usedHere;
 	}
 
 	public Solution process(Data d) {

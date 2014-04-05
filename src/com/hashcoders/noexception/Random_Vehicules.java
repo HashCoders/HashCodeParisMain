@@ -77,11 +77,13 @@ public class Random_Vehicules implements Strategy {
 	public List<Road> createPath(Intersection start, List<Intersection> path) {
 		List<Road> usedHere = new ArrayList<Road>();
 		Intersection temp = start;
+		Intersection temp2 = temp;
 		path.add(start);
 		while (time != 0) {
+			temp2 = temp;
 			temp = nextIntersection(temp, path, usedHere);
-			if (temp.equals(start))
-				return usedHere;
+			if (temp.equals(temp2))
+				return new ArrayList<Road>();
 		}
 		return usedHere;
 	}
@@ -94,10 +96,11 @@ public class Random_Vehicules implements Strategy {
 			List<Road> usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);
 			while (s.paths.get(i).getScore(data) < miniByPath) {
 				s.paths.get(i).intersections = new ArrayList<Intersection>();
+				time = d.maxT;
 				usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);	
 			}
 			used.addAll(usedHere);
-			System.out.println("Vehicule "+i);
+			System.out.println("Vehicule "+(i+1));
 		}
 		return s;
 	}
