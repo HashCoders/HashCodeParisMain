@@ -125,16 +125,14 @@ public class ProgressiveStrategy implements Strategy {
 			Direction total = new Direction(ty, tx);
 			Direction relative = new Direction(ry, rx);
 			Direction orders = new Direction(role);
-
-			int score = orders.compare(total, idealScore, relative, planBScore);
-			
-			// System.out.println("Score: " + score);
-			if (orders.comply(total) && !passedRoads.get(r.loot.i)) {
-				//System.out.println("Comply!");
-				score += newScore;
-				// System.out.println("BisScore: " + score + " ; " + r.loot.i);
-			} else {
-				//System.out.println("Nooon Comply!");
+			int score = 1;
+			if (isInGoodQuadrant()) {
+				if (!passedRoads.get(r.loot.i)) {
+					score += newScore;
+				}
+			}
+			else {
+				score = orders.compare(total, idealScore, relative, planBScore);
 			}
 			return score;
 		}
