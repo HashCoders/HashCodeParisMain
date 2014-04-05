@@ -11,6 +11,7 @@ public class Data {
 	
 	List<Road> roads = new ArrayList<Road>();
 	List<Intersection> intersections = new ArrayList<Intersection>();
+	List<Loot> loots = new ArrayList<Loot>();
 	
 	int maxT;
 	int C;
@@ -44,13 +45,19 @@ public class Data {
 			Intersection from = data.intersections.get(Integer.parseInt(road[0]));
 			Intersection to = data.intersections.get(Integer.parseInt(road[1]));
 			
+			if (from.i == 4516)
+				System.out.println("Adding road to " + to.i);
+			
 			int cost = Integer.parseInt(road[3]);
 			int length = Integer.parseInt(road[4]);
+			Loot loot = new Loot(data.loots.size(), length);
+			data.loots.add(loot);
+			
 			Road direct = new Road(
 					from, 
 					to,
 					cost,
-					length, 
+					loot, 
 					data.roads.size());
 
 			data.roads.add(direct);
@@ -62,7 +69,7 @@ public class Data {
 						to,
 						from, 
 						cost,
-						length, 
+						loot, 
 						data.roads.size());
 				
 				data.roads.add(indirect);

@@ -24,16 +24,18 @@ public class Solution {
 	
 	public float getScore(Data data) {
 		List<Boolean> passedRoads = new ArrayList<Boolean>();
-		for (Road r : data.roads)
+		for (Loot l : data.loots)
 			passedRoads.add(new Boolean(false));
 		
 		float score = 0;
 		for (Path p : paths) {
 			for (int i = 0; i < p.intersections.size()-1; i++) {
 				Road r = p.intersections.get(i).findRoadTo(p.intersections.get(i+1));
-				if (!passedRoads.get(r.i)) {
-					passedRoads.set(r.i, true);
-					score += r.length;
+				if (r == null)
+					System.out.println("Cannot find road from " + p.intersections.get(i).i + " to " + p.intersections.get(i+1).i);
+				if (!passedRoads.get(r.loot.i)) {
+					passedRoads.set(r.loot.i, true);
+					score += r.loot.score;
 				}
 			}
 		}

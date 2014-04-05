@@ -16,10 +16,14 @@ public class Intersection {
 		this.i = i;
 	}
 	
-	public Road findRoadTo(Intersection i) {
-		for (Road r : outgoing)
-			if (r.to == i)
+	public Road findRoadTo(Intersection intersection) {
+		if (i == 4516)
+			System.out.println("Searching for " + intersection.i + " ; " + outgoing.size());
+		for (Road r : outgoing) {
+			System.out.println(r.to.i);
+			if (r.to == intersection)
 				return r;
+		}
 		return null;
 	}
 }
