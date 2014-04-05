@@ -7,8 +7,9 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			Data data = Data.fromFile("input.txt");
-			Strategy strategy = new BestPickerStrategy(1000, new ProgressiveStrategy(100, 10, 10000));
+			Strategy strategy = new BestPickerStrategy(400, new ProgressiveStrategy(100, 10, 1000));
 			Solution solution = strategy.process(data);
+
 			solution.toFile("output.txt");
 			System.out.println("Score: " + solution.getScore(data));
 		} catch (IOException e) {

@@ -55,6 +55,10 @@ public class ProgressiveStrategy implements Strategy {
 			boolean goTop;
 			boolean goLeft;
 			boolean goVertical;
+
+			public boolean comply(Direction order) {
+				return goTop == order.goTop && goLeft == order.goLeft && goVertical == order.goVertical;
+			}
 			
 			public Direction(int id) {
 				goTop = (id%2 == 0);
@@ -108,7 +112,7 @@ public class ProgressiveStrategy implements Strategy {
 			int score = orders.compare(total, idealScore, relative, planBScore);
 			
 			// System.out.println("Score: " + score);
-			if (!passedRoads.get(r.loot.i)) {
+			if (orders.comply(total) && !passedRoads.get(r.loot.i)) {
 				score += newScore;
 				// System.out.println("BisScore: " + score + " ; " + r.loot.i);
 			}
