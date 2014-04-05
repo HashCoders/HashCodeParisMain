@@ -30,19 +30,20 @@ public class Data {
 		data.maxT = Integer.parseInt(init[2]);
 		data.C = Integer.parseInt(init[3]);
 		
-		for (int i = 0; i < M; i++)
+		for (int i = 0; i < N; i++)
 		{
 			line = br.readLine();
 			String[] pos = line.split(" ");
 			data.intersections.add(new Intersection(Float.parseFloat(pos[0]), Float.parseFloat(pos[1]), i));
 		}
 		
-		for (int i = 0; i < N; i++)
+		for (int i = 0; i < M; i++)
 		{
 			line = br.readLine();
 			String[] road = line.split(" ");
 			Intersection from = data.intersections.get(Integer.parseInt(road[0]));
 			Intersection to = data.intersections.get(Integer.parseInt(road[1]));
+			
 			int cost = Integer.parseInt(road[3]);
 			int length = Integer.parseInt(road[4]);
 			Road direct = new Road(

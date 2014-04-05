@@ -54,6 +54,16 @@ public class ProgressiveStrategy implements Strategy {
 				continue;
 			if (passedRoads.get(road.i))
 				continue;
+			if (road.to.outgoing.isEmpty())
+				continue;
+			return road;
+		}
+
+		for (Road road : from.outgoing) {
+			if (road.cost + t > maxT)
+				continue;
+			if (road.to.outgoing.isEmpty())
+				continue;
 			return road;
 		}
 
@@ -63,7 +73,6 @@ public class ProgressiveStrategy implements Strategy {
 			return road;
 		}
 
-		
 		return null;
 	}
 	
