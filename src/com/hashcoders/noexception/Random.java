@@ -24,7 +24,7 @@ public class Random implements Strategy {
 			while (time !=0 && i < 100) {
 				i++;
 				int temp = randomInt(0, available.size()-1);
-				System.out.println(temp);
+				//System.out.println(temp);
 				Road next = available.get(temp);		
 				int cost = next.cost;
 				if (cost <= time) {

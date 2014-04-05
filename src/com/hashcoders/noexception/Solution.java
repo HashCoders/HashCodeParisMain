@@ -22,12 +22,12 @@ public class Solution {
 			paths.add(new Path());
 	}
 	
-	public float getScore(Data data) {
+	public int getScore(Data data) {
 		List<Boolean> passedRoads = new ArrayList<Boolean>();
 		for (Loot l : data.loots)
 			passedRoads.add(new Boolean(false));
 		
-		float score = 0;
+		int score = 0;
 		for (Path p : paths) {
 			for (int i = 0; i < p.intersections.size()-1; i++) {
 				Road r = p.intersections.get(i).findRoadTo(p.intersections.get(i+1));

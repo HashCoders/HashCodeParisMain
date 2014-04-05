@@ -44,10 +44,7 @@ public class Data {
 			String[] road = line.split(" ");
 			Intersection from = data.intersections.get(Integer.parseInt(road[0]));
 			Intersection to = data.intersections.get(Integer.parseInt(road[1]));
-			
-			if (from.i == 4516)
-				System.out.println("Adding road to " + to.i);
-			
+						
 			int cost = Integer.parseInt(road[3]);
 			int length = Integer.parseInt(road[4]);
 			Loot loot = new Loot(data.loots.size(), length);
