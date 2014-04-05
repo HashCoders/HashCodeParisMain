@@ -10,7 +10,7 @@ public class HeuristicByVehicle implements Strategy {
   int maxDepth;
   List<Road> used;
 
-  Heuristic(Data d, int dep) {
+  HeuristicByVehicle(Data d, int dep) {
     data = d;
     used = new ArrayList<Road>();
     maxDepth = dep;
