@@ -6,6 +6,14 @@ import java.util.Random;
 
 public class ProgressiveStrategy implements Strategy {
 	
+	int idealScore, planBScore, newScore;
+	
+	public ProgressiveStrategy(int idealScore, int planBScore, int newScore) {
+		this.idealScore = idealScore;
+		this.planBScore = planBScore;
+		this.newScore = newScore;
+	}
+	
 	List<Boolean> passedRoads = new ArrayList<Boolean>();
 	
 	class Vehicle {
@@ -20,8 +28,10 @@ public class ProgressiveStrategy implements Strategy {
 			this.t = t;
 			this.i = i;
 			this.intersection = intersection;
-			cX = intersection.longitude;
-			cY = intersection.latitude;
+			// cX = intersection.longitude;
+			// cY = intersection.latitude;
+			cX = 2.351828;
+			cY = 48.856578;
 		}
 		
 		void takeRoad(Road road) {
@@ -47,9 +57,9 @@ public class ProgressiveStrategy implements Strategy {
 			boolean goVertical;
 			
 			public Direction(int id) {
-				goTop = (i%2 == 0);
-				goLeft = (i/8 == 0);
-				goVertical = (i%4 == 0) || (i%4 == 1);
+				goTop = (id%2 == 0);
+				goLeft = (id/4 == 0);
+				goVertical = (id%4 == 0) || (id%4 == 1);
 			}
 						
 			public Direction(double alpha) {
@@ -59,29 +69,27 @@ public class ProgressiveStrategy implements Strategy {
 			}
 			
 			public int compare(Direction ideal, int idealScore, Direction planB, int planBScore) {
-				int score = 0;
+				int score = 1;
 
 				if (goTop == ideal.goTop)
 					score += idealScore;
-				else if (goTop == planB.goTop)
+				if (goTop == planB.goTop)
 					score += planBScore;
 
 				if (goLeft == ideal.goLeft)
 					score += idealScore;
-				else if (goLeft == planB.goLeft)
+				if (goLeft == planB.goLeft)
 					score += planBScore;
 
 				if (goVertical == ideal.goVertical)
 					score += idealScore;
-				else if (goVertical == planB.goVertical)
-					score += planBScore;
 				
 				return score;
 			}
 		}
 		
 
-		int getRoadScore(Road r) {
+		int getRoadScore(Road r, List<Boolean> passedRoads) {
 			double tx,ty, rx,ry;
 			tx = r.to.longitude -cX;
 			ty = r.to.latitude - cY;
@@ -91,34 +99,46 @@ public class ProgressiveStrategy implements Strategy {
 			
 			double talpha = Math.atan2(ty, tx);
 			double ralpha = Math.atan2(ry, rx);
-			System.out.println("Talpha: " + talpha);
-			System.out.println("Ralpha: " + ralpha);
+			// System.out.println("Talpha: " + talpha);
+			// System.out.println("Ralpha: " + ralpha);
 			Direction total = new Direction(talpha);
 			Direction relative = new Direction(ralpha);
 			Direction orders = new Direction(i);
 
+			int score = orders.compare(total, idealScore, relative, planBScore);
 			
-			
-
-			return orders.compare(total, 2, relative, 1);
+			// System.out.println("Score: " + score);
+			if (!passedRoads.get(r.loot.i)) {
+				score += newScore;
+				// System.out.println("BisScore: " + score + " ; " + r.loot.i);
+			}
+			return score;
 		}
 		
-		Road selectBestRoad(float maxT) {
-			System.out.println("Test");
+		Road selectBestRoad(float maxT, List<Boolean> passedRoads) {
+			List<Road> candidates = new ArrayList<Road>();
+			List<Integer> scores = new ArrayList<Integer>();
+			int sum = 0;
+			for (Road r : intersection.outgoing)
+			{
+				if (r.cost + t > maxT)
+					continue;
 
-			for (int i = 6; i >= 0; i--) {
-				List<Road> candidates = new ArrayList<Road>();
-				
-				System.out.println("Test");
-				
-				for (Road r : intersection.outgoing)
-					if (r.cost + t <= maxT && getRoadScore(r) >= i)
-						candidates.add(r);
-				
-				if (!candidates.isEmpty()) {
-					java.util.Random random = new Random();
-					return candidates.get(random.nextInt(candidates.size()));
-				}				
+				int score = getRoadScore(r, passedRoads);
+				sum += score;
+				candidates.add(r);
+				scores.add(new Integer(score));				
+			}
+			// System.out.println("BestScore: " + bestScore);
+			
+			if (!candidates.isEmpty()) {
+				java.util.Random random = new Random();
+				int target = random.nextInt(sum);
+				for (int i = 0; i < candidates.size(); i++) {
+					target -= scores.get(i);
+					if (target < 0)
+						return candidates.get(i);
+				}
 			}
 			
 			return null;
@@ -146,9 +166,12 @@ public class ProgressiveStrategy implements Strategy {
 			vehicles.add(new Vehicle(i, 0, data.startingIntersection));
 			solution.paths.get(i).intersections.add(data.startingIntersection);
 		}
-			
+		
+		List<Boolean> passedRoads = new ArrayList<Boolean>();
+		for (Loot l : data.loots)
+			passedRoads.add(new Boolean(false));
+		
 		while(true) {
-			System.out.println("Test");
 			// Pick earliest vehicle
 			Vehicle vehicle = selectEarliest(vehicles);
 			if (vehicle == null)
@@ -161,13 +184,12 @@ public class ProgressiveStrategy implements Strategy {
 			}
 			
 			// Select best road
-			System.out.println("Test");
-			Road road = vehicle.selectBestRoad(data.maxT);
+			Road road = vehicle.selectBestRoad(data.maxT, passedRoads);
 			
 			// System.out.println("Vehicle " + vehicle.i + " takes a road costing " + road.cost);
 			vehicle.takeRoad(road);
 			solution.paths.get(vehicle.i).intersections.add(road.to);
-			// passedRoads.set(road.loot.i, true);
+			passedRoads.set(road.loot.i, true);
 		}
 		
 		return solution;

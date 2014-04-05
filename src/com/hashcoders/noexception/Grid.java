@@ -8,12 +8,14 @@ public class Grid implements Strategy {
 	List<Intersection> solution;
 	int time;
 	List<Road> used;
-	final double lat0 = 48.856578;
-	final double longi0 = 2.351828;
+	double lat0 = 48.856578;
+	double longi0 = 2.351828;
 
 	Grid(Data d) {
 		data = d;
 		used = new ArrayList<Road>();
+		//lat0  = data.startingIntersection.latitude;
+		//longi0  = data.startingIntersection.longitude;
 	}
 
 	public double angle(double lat, double longi) {
@@ -47,6 +49,8 @@ public class Grid implements Strategy {
 					double min = 1000000.0;
 					if (cost <= time) {
 						double theta = angle(next.to.latitude,next.to.longitude);
+						//
+						System.out.println(theta);
 						if (theta >= v*Math.PI/4 && theta <= (v+1)*Math.PI/4) {
 							used.add(next);
 							time -= cost;
@@ -79,6 +83,8 @@ public class Grid implements Strategy {
 					double min = 1000000.0;
 					if (cost <= time) {
 						double theta = angle(next.to.latitude,next.to.longitude);
+						//
+						System.out.println(theta);
 						double newMin = Math.abs(theta - (2 * v + 1) * Math.PI
 								/ 8);
 						if (min > newMin) {
