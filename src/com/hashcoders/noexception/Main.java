@@ -7,7 +7,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			Data data = Data.fromFile("input.txt");
-			Strategy strategy = new ProgressiveStrategy();
+			Strategy strategy = new Random_Better(data);
 			Solution solution = strategy.process(data);
 			solution.toFile("output.txt");
 		} catch (IOException e) {
