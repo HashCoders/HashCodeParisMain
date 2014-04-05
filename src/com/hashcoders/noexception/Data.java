@@ -14,7 +14,7 @@ public class Data {
 	
 	int maxT;
 	int C;
-	int startingIntersection;
+	Intersection startingIntersection;
 	
 	public static Data fromFile(String filename) throws IOException {
 
@@ -29,7 +29,6 @@ public class Data {
 		int M = Integer.parseInt(init[1]);
 		data.maxT = Integer.parseInt(init[2]);
 		data.C = Integer.parseInt(init[3]);
-		data.startingIntersection = Integer.parseInt(init[4]);
 		
 		for (int i = 0; i < M; i++)
 		{
@@ -68,6 +67,8 @@ public class Data {
 			}
 		}
 		
+		data.startingIntersection = data.intersections.get(Integer.parseInt(init[4]));
+
 		br.close();
 		
 		return data;

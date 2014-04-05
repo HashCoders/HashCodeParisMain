@@ -15,6 +15,11 @@ public class Solution {
 	int C;
 	List<Path> paths = new ArrayList<Path>();
 	
+	public Solution(int C) {
+		this.C = C;
+		for (int i = 0; i < C; i++)
+			paths.add(new Path());
+	}
 	
 	public void toFile(String filename) throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = new PrintWriter(filename, "UTF-8");
