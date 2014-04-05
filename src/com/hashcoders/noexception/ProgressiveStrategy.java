@@ -5,10 +5,13 @@ import java.util.List;
 
 public class ProgressiveStrategy implements Strategy {
 	
+	List<Boolean> passedRoads = new ArrayList<Boolean>();
+	
 	class Vehicle {
 		int i;
 		float t;
 		Intersection intersection;
+		boolean over = false;
 		
 		Vehicle(int i, float t, Intersection intersection) {
 			this.t = t;
@@ -21,42 +24,74 @@ public class ProgressiveStrategy implements Strategy {
 			t += road.cost;
 			intersection = road.to;
 		}
+		
+		boolean isOver(float maxT) {
+			for (Road road : intersection.outgoing)
+				if (t + road.cost < maxT)
+					return false;
+			return true;
+		}
 	}
 	
 	Vehicle selectEarliest(List<Vehicle> candidates) {
-		Vehicle best = candidates.get(0);
+		Vehicle best = null;
 		for (Vehicle vehicle : candidates) {
-			if (vehicle.t < best.t)
-				best = vehicle;
+			if (!vehicle.over)
+				if (best == null || vehicle.t < best.t)
+					best = vehicle;
 		}
 		return best;
 	}
 	
-	Road selectBestRoad(Intersection from) {
-		Road best = from.outgoing.get(0);
+	Road selectBestRoad(Intersection from, float t, float maxT) {
 		
 		for (Road road : from.outgoing) {
-			
+			if (road.cost + t > maxT)
+				continue;
+			if (passedRoads.get(road.i))
+				continue;
+			return road;
 		}
+
+		for (Road road : from.outgoing) {
+			if (road.cost + t > maxT)
+				continue;
+			return road;
+		}
+
 		
-		
-		return best;
+		return null;
 	}
 	
 	@Override
 	public Solution process(Data data) {
 		Solution solution = new Solution(data.C);
+		for (Road r : data.roads)
+			passedRoads.add(new Boolean(false));
 		
 		List<Vehicle> vehicles = new ArrayList<Vehicle>();
 		for (int i = 0; i < data.C; i++)
+		{
 			vehicles.add(new Vehicle(i, 0, data.startingIntersection));
-		
+			solution.paths.get(i).intersections.add(data.startingIntersection);
+		}
+			
 		while(true) {
 			// Pick earliest vehicle
 			Vehicle vehicle = selectEarliest(vehicles);
-			// Select best road
+			if (vehicle == null)
+				break;
+			if (vehicle.isOver(data.maxT))
+			{
+				vehicle.over = true;
+				continue;
+			}
 			
-			break;
+			// Select best road
+			Road road = selectBestRoad(vehicle.intersection, vehicle.t, data.maxT);
+			vehicle.takeRoad(road);
+			solution.paths.get(vehicle.i).intersections.add(road.to);
+			passedRoads.set(road.i, true);
 		}
 		
 		return solution;
