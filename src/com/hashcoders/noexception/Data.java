@@ -4,12 +4,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Data {
 	
-	List<Road> roads;
-	List<Intersection> intersections;
+	List<Road> roads = new ArrayList<Road>();
+	List<Intersection> intersections = new ArrayList<Intersection>();
 	
 	int maxT;
 	int C;
@@ -44,9 +45,9 @@ public class Data {
 			data.roads.add(new Road(
 					data.intersections.get(Integer.parseInt(road[0])), 
 					data.intersections.get(Integer.parseInt(road[1])),
-					(Integer.parseInt(road[3]) == 1),
-					Integer.parseInt(road[4]),
-					Integer.parseInt(road[5])));
+					(Integer.parseInt(road[2]) == 1),
+					Integer.parseInt(road[3]),
+					Integer.parseInt(road[4])));
 		}
 		
 		br.close();
