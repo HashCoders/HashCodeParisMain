@@ -5,8 +5,9 @@ public class Road {
 	Intersection to;
 	int cost;
 	int length;
+	int i;
 	
-	public Road(Intersection from, Intersection to, int cost, int length) {
+	public Road(Intersection from, Intersection to, int cost, int length, int i) {
 		this.from = from;
 		this.to = to;
 		this.cost = cost;

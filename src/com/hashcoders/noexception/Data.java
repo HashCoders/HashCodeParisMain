@@ -47,7 +47,8 @@ public class Data {
 					from, 
 					to,
 					Integer.parseInt(road[3]),
-					Integer.parseInt(road[4]));
+					Integer.parseInt(road[4]), 
+					data.roads.size());
 
 			data.roads.add(direct);
 			from.outgoing.add(direct);
@@ -58,7 +59,8 @@ public class Data {
 						data.intersections.get(Integer.parseInt(road[1])),
 						data.intersections.get(Integer.parseInt(road[0])), 
 						Integer.parseInt(road[3]),
-						Integer.parseInt(road[4]));
+						Integer.parseInt(road[4]),
+						data.roads.size());
 				
 				data.roads.add(indirect);
 
