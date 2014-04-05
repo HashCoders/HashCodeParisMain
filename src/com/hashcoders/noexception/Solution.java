@@ -11,6 +11,27 @@ public class Solution {
 	
 	public static class Path {
 		List<Intersection> intersections = new ArrayList<Intersection>();
+		
+		public int getScore(Data data) {
+			List<Boolean> passedRoads = new ArrayList<Boolean>();
+			for (Loot l : data.loots)
+				passedRoads.add(new Boolean(false));
+			return getScore(data, passedRoads);
+		}
+		
+		public int getScore(Data data, List<Boolean> passedRoadList) {
+			int score = 0;
+			for (int i = 0; i < intersections.size()-1; i++) {
+				Road r = intersections.get(i).findRoadTo(intersections.get(i+1));
+				if (r == null)
+					System.out.println("Cannot find road from " + intersections.get(i).i + " to " + intersections.get(i+1).i);
+				if (!passedRoadList.get(r.loot.i)) {
+					passedRoadList.set(r.loot.i, true);
+					score += r.loot.score;
+				}
+			}
+			return score;
+		}
 	}
 	
 	int C;
@@ -29,15 +50,7 @@ public class Solution {
 		
 		int score = 0;
 		for (Path p : paths) {
-			for (int i = 0; i < p.intersections.size()-1; i++) {
-				Road r = p.intersections.get(i).findRoadTo(p.intersections.get(i+1));
-				if (r == null)
-					System.out.println("Cannot find road from " + p.intersections.get(i).i + " to " + p.intersections.get(i+1).i);
-				if (!passedRoads.get(r.loot.i)) {
-					passedRoads.set(r.loot.i, true);
-					score += r.loot.score;
-				}
-			}
+			score += p.getScore(data, passedRoads);
 		}
 		
 		return score;
