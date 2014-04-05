@@ -30,7 +30,7 @@ public class Random_Vehicules implements Strategy {
 	}
 
 	public Intersection nextIntersection(Intersection from,
-			List<Intersection> path) {
+			List<Intersection> path, List<Road> usedHere) {
 		List<Road> available = from.outgoing;
 		List<Road> availableNotUsed = notUsed(available);
 
@@ -44,7 +44,7 @@ public class Random_Vehicules implements Strategy {
 					Road next = availableNotUsed.get(temp);
 					int cost = next.cost;
 					if (cost <= time) {
-						used.add(next);
+						usedHere.add(next);
 						time -= cost;
 						Intersection to = next.to;
 						path.add(to);
@@ -61,7 +61,7 @@ public class Random_Vehicules implements Strategy {
 					Road next = available.get(temp);
 					int cost = next.cost;
 					if (cost <= time) {
-						used.add(next);
+						usedHere.add(next);
 						time -= cost;
 						Intersection to = next.to;
 						path.add(to);
@@ -74,14 +74,16 @@ public class Random_Vehicules implements Strategy {
 		return from;
 	}
 
-	public void createPath(Intersection start, List<Intersection> path) {
+	public List<Road> createPath(Intersection start, List<Intersection> path) {
+		List<Road> usedHere = new ArrayList<Road>();
 		Intersection temp = start;
 		path.add(start);
 		while (time != 0) {
-			temp = nextIntersection(temp, path);
+			temp = nextIntersection(temp, path, usedHere);
 			if (temp.equals(start))
-				return;
+				return usedHere;
 		}
+		return usedHere;
 	}
 
 	public Solution process(Data d) {
@@ -89,11 +91,13 @@ public class Random_Vehicules implements Strategy {
 		Solution s = new Solution(numVeh);
 		for (int i = 0; i < numVeh; i++) {
 			time = d.maxT;
-			createPath(data.startingIntersection, s.paths.get(i).intersections);
+			List<Road> usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);
 			while (s.paths.get(i).getScore(data) < miniByPath) {
 				s.paths.get(i).intersections = new ArrayList<Intersection>();
-				createPath(data.startingIntersection, s.paths.get(i).intersections);	
+				usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);	
 			}
+			used.addAll(usedHere);
+			System.out.println("Vehicule "+i);
 		}
 		return s;
 	}
