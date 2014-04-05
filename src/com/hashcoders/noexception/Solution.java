@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Solution {
 	
+	
 	public static class Path {
 		List<Intersection> intersections = new ArrayList<Intersection>();
 	}
@@ -19,6 +20,25 @@ public class Solution {
 		this.C = C;
 		for (int i = 0; i < C; i++)
 			paths.add(new Path());
+	}
+	
+	public float getScore(Data data) {
+		List<Boolean> passedRoads = new ArrayList<Boolean>();
+		for (Road r : data.roads)
+			passedRoads.add(new Boolean(false));
+		
+		float score = 0;
+		for (Path p : paths) {
+			for (int i = 0; i < p.intersections.size()-1; i++) {
+				Road r = p.intersections.get(i).findRoadTo(p.intersections.get(i+1));
+				if (!passedRoads.get(r.i)) {
+					passedRoads.set(r.i, true);
+					score += r.length;
+				}
+			}
+		}
+		
+		return score;
 	}
 	
 	public void toFile(String filename) throws FileNotFoundException, UnsupportedEncodingException {

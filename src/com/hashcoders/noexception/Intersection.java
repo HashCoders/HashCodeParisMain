@@ -15,4 +15,11 @@ public class Intersection {
 		this.longitude = longitude;
 		this.i = i;
 	}
+	
+	public Road findRoadTo(Intersection i) {
+		for (Road r : outgoing)
+			if (r.to == i)
+				return r;
+		return null;
+	}
 }
