@@ -14,7 +14,6 @@ public class BestPickerStrategy implements Strategy {
 		Solution best = null;
 		int bestScore = 0;
 		for (int i = 0; i < n; i++) {
-			Strategy strategy = new Random_Better(data);
 			Solution solution = strategy.process(data);
 			int score = solution.getScore(data);
 			if (best == null || score > bestScore) {

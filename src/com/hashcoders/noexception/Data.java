@@ -35,7 +35,7 @@ public class Data {
 		{
 			line = br.readLine();
 			String[] pos = line.split(" ");
-			data.intersections.add(new Intersection(Float.parseFloat(pos[0]), Float.parseFloat(pos[1]), i));
+			data.intersections.add(new Intersection(Double.parseDouble(pos[0]), Double.parseDouble(pos[1]), i));
 		}
 		
 		for (int i = 0; i < M; i++)

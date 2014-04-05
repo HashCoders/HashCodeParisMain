@@ -3,12 +3,12 @@ package com.hashcoders.noexception;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Random implements Strategy {
+public class RandomStrategy implements Strategy {
 	Data data;
 	List<Intersection> solution;
 	int time;
 	
-	Random(Data d) {
+	RandomStrategy(Data d) {
 		data = d;
 	}
 	
