@@ -10,7 +10,7 @@ public class Main {
 			Strategy strategy = new Random_Better(data);
 			Solution solution = strategy.process(data);
 			solution.toFile("output.txt");
-			System.out.println("Score: " + solution.getScore(data));
+			//System.out.println("Score: " + solution.getScore(data));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
