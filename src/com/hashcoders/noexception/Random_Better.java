@@ -7,10 +7,11 @@ public class Random_Better implements Strategy {
 	Data data;
 	List<Intersection> solution;
 	int time;
-	List<Road> used = new ArrayList<Road>();
+	List<Road> used;
 
 	Random_Better(Data d) {
 		data = d;
+		used = new ArrayList<Road>();
 	}
 
 	int randomInt(int min, int max) {

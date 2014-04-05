@@ -38,7 +38,7 @@ public class ProgressiveStrategy implements Strategy {
     }
 
     List<Road> availableRoads(Data d){
-      List<Road> av = new List<Road>();
+      List<Road> av = new ArrayList<Road>();
       for(Road r : d.roads)
         if(r.from == intersection)
           av.add(r);

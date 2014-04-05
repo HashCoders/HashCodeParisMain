@@ -8,7 +8,7 @@ public class Main {
 		try {
 			Data data = Data.fromFile("input.txt");
 			
-			Strategy strategy = new BestPickerStrategy(1000, new Random_Better(data));
+			Strategy strategy = new Heuristic(data,2);
 			Solution solution = strategy.process(data);
 			solution.toFile("output.txt");
 			System.out.println("Score: " + solution.getScore(data));

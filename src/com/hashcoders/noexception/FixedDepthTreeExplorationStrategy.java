@@ -1,5 +1,8 @@
 package com.hashcoders.noexception;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FixedDepthTreeExplorationStrategy implements Strategy {
   class Vehicle {
     int i;
@@ -27,7 +30,7 @@ public class FixedDepthTreeExplorationStrategy implements Strategy {
 
     List<Road> availableRoads(Data d){
       if(availableRoads == null){
-        List<Road> av = new List<Road>();
+        List<Road> av = new ArrayList<Road>();
         for(Road r : d.roads)
           if(r.from == intersection)
             av.add(r);
@@ -39,9 +42,9 @@ public class FixedDepthTreeExplorationStrategy implements Strategy {
     List<Road> availableNotBrowsedRoads(Data d, List<Road> used){
       if(availableNotBrowsedRoads == null){
         List<Road> av = availableRoads(d);
-        List<Road> avnb = new List<Road>();
+        List<Road> avnb = new ArrayList<Road>();
         for(Road r : av){
-          if(!used.contains(r)
+          if(!used.contains(r))
               avnb.add(r);
         }
         availableNotBrowsedRoads = avnb;
@@ -58,7 +61,7 @@ public class FixedDepthTreeExplorationStrategy implements Strategy {
   int currentScore = 0;
   double[] weight_time; //the weight of steps in time
   List<Road> used = new ArrayList<Road>();
-  List<Vehicle> vh = new List<Vehicle>();
+  List<Vehicle> vh = new ArrayList<Vehicle>();
 
   Vehicle next() {
     Vehicle best = null;
@@ -89,8 +92,8 @@ public class FixedDepthTreeExplorationStrategy implements Strategy {
     int availableRoads = 0;
     int notBrowsedRoads = 0;
     for(Vehicle v : vh){
-      availableRoads += v.availableRoads(data).size;
-      notBrowsedRoads += v.availableNotBrowsedRoads(data, used).size;
+      availableRoads += v.availableRoads(data).size();
+      notBrowsedRoads += v.availableNotBrowsedRoads(data, used).size();
     }
     return availableRoads + notBrowsedRoads;
   }
@@ -104,7 +107,7 @@ public class FixedDepthTreeExplorationStrategy implements Strategy {
     for (int i = 0; i < data.C; i++)
     {
       vehicles.add(new Vehicle(i, 0, data.startingIntersection));
-      solution.paths.get(i).intersections.add(data.startingIntersection);
+     // solution.paths.get(i).intersections.add(data.startingIntersection);
     }
 
     return s;
