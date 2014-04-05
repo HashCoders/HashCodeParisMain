@@ -40,12 +40,9 @@ public class Heuristic implements Strategy {
 			if (!path.contains(pot) && !used.contains(pot)
 					&& !potUsed.contains(pot)) {
 				potUsed.add(pot);
-				res = pot.loot.score
-						+ Math.max(res,
-								lengthUnused(path, pot.to, depth - 1, potUsed));
+				res = res + pot.loot.score + lengthUnused(path, pot.to, depth - 1, potUsed);
 			} else {
-				res += Math.max(res,
-						lengthUnused(path, pot.to, depth - 1, potUsed));
+				res = res + lengthUnused(path, pot.to, depth - 1, potUsed);
 			}
 		}
 		return res;

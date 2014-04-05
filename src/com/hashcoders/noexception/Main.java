@@ -8,7 +8,7 @@ public class Main {
 		try {
 			Data data = Data.fromFile("input.txt");
 			
-			Strategy strategy = new Heuristic(data,2);
+			Strategy strategy = new Heuristic(data,3);
 			Solution solution = strategy.process(data);
 			solution.toFile("output.txt");
 			System.out.println("Score: " + solution.getScore(data));
