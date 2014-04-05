@@ -91,14 +91,24 @@ public class Random_Vehicules implements Strategy {
 	public Solution process(Data d) {
 		int numVeh = data.C;
 		Solution s = new Solution(numVeh);
+		
+		List<Boolean> passedRoads = new ArrayList<Boolean>();
+		for (Loot l : data.loots)
+			passedRoads.add(new Boolean(false));
+
 		for (int i = 0; i < numVeh; i++) {
+			List<Boolean> tempPassedLoots = new ArrayList<Boolean>();
+			tempPassedLoots.addAll(passedRoads);
 			time = d.maxT;
 			List<Road> usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);
-			while (s.paths.get(i).getScore(data) < miniByPath) {
+			while (s.paths.get(i).getScore(data, tempPassedLoots) < miniByPath) {
+				tempPassedLoots.clear();
+				tempPassedLoots.addAll(passedRoads);
 				s.paths.get(i).intersections = new ArrayList<Intersection>();
 				time = d.maxT;
 				usedHere = createPath(data.startingIntersection, s.paths.get(i).intersections);	
 			}
+			passedRoads = tempPassedLoots;
 			used.addAll(usedHere);
 			System.out.println("Vehicule "+(i+1));
 		}
